@@ -5,10 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,8 +18,9 @@ public class TestIterator {
 
   @BeforeEach
   public void setUp() throws Exception {
-    list = new ArrayList<Integer>();
-    // TODO Question: Also try with a LinkedList - does it make any difference?
+    list = new LinkedList<Integer>();
+    // Question: Also try with a LinkedList - does it make any difference?
+    // Answer: No difference. The Iterable interface is the same for List and LinkedList.
   }
 
   @AfterEach
@@ -47,19 +46,18 @@ public class TestIterator {
     final var i = list.iterator();
     assertTrue(i.hasNext());
     assertEquals(33, i.next().intValue());
-    // TODO fix the expected values in the assertions below
     assertTrue(i.hasNext());
-    assertEquals(0, i.next().intValue());
+    assertEquals(77, i.next().intValue());
     assertTrue(i.hasNext());
-    assertEquals(0, i.next().intValue());
+    assertEquals(44, i.next().intValue());
     assertTrue(i.hasNext());
-    assertEquals(0, i.next().intValue());
+    assertEquals(77, i.next().intValue());
     assertTrue(i.hasNext());
-    assertEquals(0, i.next().intValue());
+    assertEquals(55, i.next().intValue());
     assertTrue(i.hasNext());
-    assertEquals(0, i.next().intValue());
+    assertEquals(77, i.next().intValue());
     assertTrue(i.hasNext());
-    assertEquals(0, i.next().intValue());
+    assertEquals(66, i.next().intValue());
     assertFalse(i.hasNext());
   }
 
@@ -75,13 +73,15 @@ public class TestIterator {
     final var i = list.iterator();
     while (i.hasNext()) {
       if (i.next() == 77) {
-        i.remove(); // TODO Question: What happens if you use list.remove(Integer.valueOf(77))?
+        i.remove(); // Question: What happens if you use list.remove(Integer.valueOf(77))?
+
+        // Answer: list.remove() removes the first occurrence of an object when it is provided.
+        // In this case, the first occurrence of 77 is removed but others are kept.
       }
     }
-    // TODO using assertEquals and List.of, express which values are left in the list
+    assertEquals(List.of(33,44,55,66), list);
     // See TestList.java for examples of how to use List.of; also see the Java List
     // interface for more information
-    fail("Not yet implemented"); // remove this line when done
   }
 
   @Test
@@ -95,7 +95,14 @@ public class TestIterator {
     list.add(66);
     double sum = 0;
     int n = 0;
-    // TODO use an iterator and a while loop to compute the average (mean) of the values
+
+    ListIterator<Integer> iter = list.listIterator();
+    Integer next;
+    while(iter.hasNext()) {
+      next = iter.next();
+      sum += next;
+      n += 1;
+    }
     // (defined as the sum of the items divided by the number of items)
     // testNonempty shows how to use an iterator; use i.hasNext() in the while loop condition
     assertEquals(61.3, sum / n, 0.1);
